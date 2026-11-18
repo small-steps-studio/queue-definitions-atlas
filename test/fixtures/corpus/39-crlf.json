@@ -1,0 +1,212 @@
+{
+  "rabbit_version": "4.0.5",
+  "rabbitmq_version": "3.13.7",
+  "users": [
+    {
+      "name": "guest",
+      "password_hash": "h1",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": [
+        "administrator"
+      ]
+    },
+    {
+      "name": "svc-0",
+      "password_hash": "h0",
+      "hashing_algorithm": "rabbit_password_hashing_md5",
+      "tags": []
+    },
+    {
+      "name": "svc-1",
+      "password_hash": "h1",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": []
+    },
+    {
+      "name": "svc-2",
+      "password_hash": "h2",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": []
+    }
+  ],
+  "vhosts": [
+    {
+      "name": "/"
+    },
+    {
+      "name": "shop"
+    }
+  ],
+  "permissions": [
+    {
+      "user": "svc-0",
+      "vhost": "shop",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    }
+  ],
+  "topic_permissions": [],
+  "parameters": [],
+  "global_parameters": [],
+  "policies": [
+    {
+      "vhost": "/",
+      "name": "p1",
+      "pattern": "^nothing\\.",
+      "apply-to": "queues",
+      "definition": {
+        "message-ttl": 60000
+      },
+      "priority": 0
+    }
+  ],
+  "queues": [
+    {
+      "name": "audit.root.0",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "stream"
+      }
+    },
+    {
+      "name": "payments.root.1",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "classic",
+        "x-max-length": 10000
+      }
+    },
+    {
+      "name": "emails.root.2",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "orders.shop.0",
+      "vhost": "shop",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "classic",
+        "x-max-length": 10000
+      }
+    },
+    {
+      "name": "audit.shop.1",
+      "vhost": "shop",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "payments.shop.2",
+      "vhost": "shop",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    }
+  ],
+  "exchanges": [
+    {
+      "name": "events.0",
+      "vhost": "/",
+      "type": "topic",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "audit.0",
+      "vhost": "shop",
+      "type": "headers",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "events.1",
+      "vhost": "shop",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "events.2",
+      "vhost": "shop",
+      "type": "headers",
+      "durable": true,
+      "auto_delete": false,
+      "internal": true,
+      "arguments": {}
+    }
+  ],
+  "bindings": [
+    {
+      "source": "events.0",
+      "vhost": "/",
+      "destination": "ghost.queue",
+      "destination_type": "queue",
+      "routing_key": "#",
+      "arguments": {}
+    },
+    {
+      "source": "events.0",
+      "vhost": "/",
+      "destination": "payments.root.1",
+      "destination_type": "queue",
+      "routing_key": "order.created",
+      "arguments": {}
+    },
+    {
+      "source": "events.0",
+      "vhost": "/",
+      "destination": "emails.root.2",
+      "destination_type": "queue",
+      "routing_key": "#",
+      "arguments": {}
+    },
+    {
+      "source": "events.2",
+      "vhost": "shop",
+      "destination": "orders.shop.0",
+      "destination_type": "queue",
+      "routing_key": "mail.*",
+      "arguments": {}
+    },
+    {
+      "source": "events.1",
+      "vhost": "shop",
+      "destination": "ghost.queue",
+      "destination_type": "queue",
+      "routing_key": "order.created",
+      "arguments": {}
+    },
+    {
+      "source": "missing.exchange",
+      "vhost": "shop",
+      "destination": "payments.shop.2",
+      "destination_type": "queue",
+      "routing_key": "order.created",
+      "arguments": {}
+    },
+    {
+      "source": "audit.0",
+      "vhost": "shop",
+      "destination": "amq.topic",
+      "destination_type": "exchange",
+      "routing_key": "x",
+      "arguments": {}
+    }
+  ]
+}

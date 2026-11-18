@@ -1,0 +1,32 @@
+{
+  "vhosts": [
+    {
+      "name": "/"
+    }
+  ],
+  "policies": [
+    {
+      "vhost": "/",
+      "name": "broken",
+      "pattern": "([",
+      "apply-to": "queues",
+      "definition": {}
+    },
+    {
+      "vhost": "/",
+      "name": "mirror",
+      "pattern": ".*",
+      "definition": {
+        "ha-mode": "exactly",
+        "ha-params": 2
+      }
+    }
+  ],
+  "queues": [
+    {
+      "name": "a",
+      "vhost": "/",
+      "durable": true
+    }
+  ]
+}

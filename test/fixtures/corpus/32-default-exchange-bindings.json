@@ -1,0 +1,26 @@
+{
+  "vhosts": [
+    {
+      "name": "/"
+    }
+  ],
+  "queues": [
+    {
+      "name": "work",
+      "vhost": "/",
+      "durable": true,
+      "arguments": {}
+    }
+  ],
+  "bindings": [
+    {
+      "source": "amq.direct",
+      "vhost": "/",
+      "destination": "work",
+      "destination_type": "queue",
+      "routing_key": "work",
+      "arguments": {}
+    }
+  ],
+  "exchanges": []
+}

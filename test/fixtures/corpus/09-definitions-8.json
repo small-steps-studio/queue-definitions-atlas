@@ -1,0 +1,93 @@
+{
+  "rabbit_version": "3.12.13",
+  "rabbitmq_version": "3.12.13",
+  "users": [
+    {
+      "name": "guest",
+      "password_hash": "h1",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": [
+        "administrator"
+      ]
+    },
+    {
+      "name": "svc-0",
+      "password_hash": "h0",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": []
+    },
+    {
+      "name": "svc-1",
+      "password_hash": "h1",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": "monitoring"
+    },
+    {
+      "name": "svc-2",
+      "password_hash": "h2",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": []
+    }
+  ],
+  "vhosts": [
+    {
+      "name": "/"
+    }
+  ],
+  "permissions": [
+    {
+      "user": "svc-1",
+      "vhost": "/",
+      "configure": "^svc-.*",
+      "write": ".*",
+      "read": ".*"
+    }
+  ],
+  "topic_permissions": [],
+  "parameters": [],
+  "global_parameters": [],
+  "policies": [],
+  "queues": [
+    {
+      "name": "audit.root.0",
+      "vhost": "/",
+      "durable": false,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "quorum",
+        "x-dead-letter-exchange": "dlx"
+      }
+    },
+    {
+      "name": "audit.root.1",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-dead-letter-exchange": "dlx",
+        "x-max-length": 10000
+      }
+    }
+  ],
+  "exchanges": [
+    {
+      "name": "audit.0",
+      "vhost": "/",
+      "type": "headers",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "bindings": [
+    {
+      "source": "audit.0",
+      "vhost": "/",
+      "destination": "audit.root.1",
+      "destination_type": "queue",
+      "routing_key": "#",
+      "arguments": {}
+    }
+  ]
+}

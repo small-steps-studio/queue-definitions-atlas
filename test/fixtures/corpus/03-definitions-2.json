@@ -1,0 +1,90 @@
+{
+  "rabbit_version": "4.0.5",
+  "rabbitmq_version": "3.13.7",
+  "users": [
+    {
+      "name": "svc-0",
+      "password_hash": "h0",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": []
+    },
+    {
+      "name": "svc-1",
+      "password_hash": "h1",
+      "hashing_algorithm": "rabbit_password_hashing_md5",
+      "tags": []
+    }
+  ],
+  "vhosts": [
+    {
+      "name": "/"
+    }
+  ],
+  "permissions": [
+    {
+      "user": "svc-0",
+      "vhost": "/",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    }
+  ],
+  "topic_permissions": [],
+  "parameters": [],
+  "global_parameters": [],
+  "policies": [
+    {
+      "vhost": "/",
+      "name": "p1",
+      "pattern": "([bad",
+      "apply-to": "all",
+      "definition": {
+        "message-ttl": 60000
+      },
+      "priority": 0
+    }
+  ],
+  "queues": [
+    {
+      "name": "payments.root.0",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-max-length": 10000
+      }
+    },
+    {
+      "name": "orders.root.1",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "classic",
+        "x-dead-letter-exchange": "dlx"
+      }
+    },
+    {
+      "name": "audit.root.2",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "stream",
+        "x-max-length": 10000
+      }
+    }
+  ],
+  "exchanges": [
+    {
+      "name": "events.0",
+      "vhost": "/",
+      "type": "headers",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "bindings": []
+}

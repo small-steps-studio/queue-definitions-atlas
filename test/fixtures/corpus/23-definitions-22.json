@@ -1,0 +1,498 @@
+{
+  "rabbit_version": "4.0.5",
+  "rabbitmq_version": "3.12.13",
+  "users": [
+    {
+      "name": "svc-0",
+      "password_hash": "",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": []
+    },
+    {
+      "name": "svc-1",
+      "password_hash": "h1",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": "monitoring"
+    },
+    {
+      "name": "svc-2",
+      "password_hash": "h2",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": []
+    }
+  ],
+  "vhosts": [
+    {
+      "name": "/"
+    },
+    {
+      "name": "shop"
+    },
+    {
+      "name": "billing"
+    }
+  ],
+  "permissions": [
+    {
+      "user": "svc-1",
+      "vhost": "/",
+      "configure": "^svc-.*",
+      "write": ".*",
+      "read": ".*"
+    },
+    {
+      "user": "svc-0",
+      "vhost": "billing",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    }
+  ],
+  "topic_permissions": [],
+  "parameters": [],
+  "global_parameters": [],
+  "policies": [
+    {
+      "vhost": "/",
+      "name": "p1",
+      "pattern": "^nothing\\.",
+      "apply-to": "all",
+      "definition": {
+        "message-ttl": 60000
+      },
+      "priority": 0
+    }
+  ],
+  "queues": [
+    {
+      "name": "orders.root.0",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "orders.root.1",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "quorum"
+      }
+    },
+    {
+      "name": "emails.root.2",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "emails.root.3",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "orders.root.4",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-max-length": 10000
+      }
+    },
+    {
+      "name": "payments.root.5",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "stream"
+      }
+    },
+    {
+      "name": "orders.root.6",
+      "vhost": "/",
+      "durable": false,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "audit.root.7",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "payments.shop.0",
+      "vhost": "shop",
+      "durable": false,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "audit.shop.1",
+      "vhost": "shop",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-dead-letter-exchange": "audit.0"
+      }
+    },
+    {
+      "name": "emails.shop.2",
+      "vhost": "shop",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "quorum"
+      }
+    },
+    {
+      "name": "orders.shop.3",
+      "vhost": "shop",
+      "durable": false,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "quorum"
+      }
+    },
+    {
+      "name": "emails.shop.4",
+      "vhost": "shop",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "classic",
+        "x-dead-letter-exchange": "audit.0"
+      }
+    },
+    {
+      "name": "audit.shop.5",
+      "vhost": "shop",
+      "durable": false,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "payments.shop.6",
+      "vhost": "shop",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "classic"
+      }
+    },
+    {
+      "name": "orders.shop.7",
+      "vhost": "shop",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "stream"
+      }
+    },
+    {
+      "name": "emails.billing.0",
+      "vhost": "billing",
+      "durable": false,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "stream",
+        "x-max-length": 10000
+      }
+    },
+    {
+      "name": "emails.billing.1",
+      "vhost": "billing",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "stream",
+        "x-dead-letter-exchange": "dlx"
+      }
+    },
+    {
+      "name": "payments.billing.2",
+      "vhost": "billing",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-dead-letter-exchange": "audit.0"
+      }
+    },
+    {
+      "name": "emails.billing.3",
+      "vhost": "billing",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "classic"
+      }
+    },
+    {
+      "name": "payments.billing.4",
+      "vhost": "billing",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "audit.billing.5",
+      "vhost": "billing",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "quorum",
+        "x-dead-letter-exchange": "audit.0"
+      }
+    },
+    {
+      "name": "orders.billing.6",
+      "vhost": "billing",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-dead-letter-exchange": "audit.0"
+      }
+    },
+    {
+      "name": "orders.billing.7",
+      "vhost": "billing",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    }
+  ],
+  "exchanges": [
+    {
+      "name": "events.0",
+      "vhost": "/",
+      "type": "fanout",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "audit.1",
+      "vhost": "/",
+      "type": "fanout",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "audit.0",
+      "vhost": "shop",
+      "type": "fanout",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "mail.1",
+      "vhost": "shop",
+      "type": "fanout",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "events.2",
+      "vhost": "shop",
+      "type": "fanout",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "audit.0",
+      "vhost": "billing",
+      "type": "headers",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "audit.1",
+      "vhost": "billing",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "events.2",
+      "vhost": "billing",
+      "type": "headers",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "bindings": [
+    {
+      "source": "missing.exchange",
+      "vhost": "/",
+      "destination": "orders.root.0",
+      "destination_type": "queue",
+      "routing_key": "mail.*",
+      "arguments": {}
+    },
+    {
+      "source": "events.0",
+      "vhost": "/",
+      "destination": "orders.root.1",
+      "destination_type": "queue",
+      "routing_key": "",
+      "arguments": {}
+    },
+    {
+      "source": "audit.1",
+      "vhost": "/",
+      "destination": "emails.root.2",
+      "destination_type": "queue",
+      "routing_key": "mail.*",
+      "arguments": {}
+    },
+    {
+      "source": "events.0",
+      "vhost": "/",
+      "destination": "emails.root.3",
+      "destination_type": "queue",
+      "routing_key": "mail.*",
+      "arguments": {}
+    },
+    {
+      "source": "events.0",
+      "vhost": "/",
+      "destination": "orders.root.4",
+      "destination_type": "queue",
+      "routing_key": "order.created",
+      "arguments": {}
+    },
+    {
+      "source": "events.0",
+      "vhost": "/",
+      "destination": "payments.root.5",
+      "destination_type": "queue",
+      "routing_key": "",
+      "arguments": {}
+    },
+    {
+      "source": "events.0",
+      "vhost": "/",
+      "destination": "orders.root.6",
+      "destination_type": "queue",
+      "routing_key": "",
+      "arguments": {}
+    },
+    {
+      "source": "events.0",
+      "vhost": "/",
+      "destination": "amq.topic",
+      "destination_type": "exchange",
+      "routing_key": "x",
+      "arguments": {}
+    },
+    {
+      "source": "missing.exchange",
+      "vhost": "shop",
+      "destination": "audit.shop.1",
+      "destination_type": "queue",
+      "routing_key": "order.created",
+      "arguments": {}
+    },
+    {
+      "source": "mail.1",
+      "vhost": "shop",
+      "destination": "emails.shop.2",
+      "destination_type": "queue",
+      "routing_key": "order.created",
+      "arguments": {}
+    },
+    {
+      "source": "events.2",
+      "vhost": "shop",
+      "destination": "orders.shop.3",
+      "destination_type": "queue",
+      "routing_key": "",
+      "arguments": {}
+    },
+    {
+      "source": "events.2",
+      "vhost": "shop",
+      "destination": "emails.shop.4",
+      "destination_type": "queue",
+      "routing_key": "",
+      "arguments": {}
+    },
+    {
+      "source": "audit.1",
+      "vhost": "billing",
+      "destination": "emails.billing.0",
+      "destination_type": "queue",
+      "routing_key": "mail.*",
+      "arguments": {}
+    },
+    {
+      "source": "audit.1",
+      "vhost": "billing",
+      "destination": "emails.billing.1",
+      "destination_type": "queue",
+      "routing_key": "mail.*",
+      "arguments": {}
+    },
+    {
+      "source": "audit.1",
+      "vhost": "billing",
+      "destination": "payments.billing.2",
+      "destination_type": "queue",
+      "routing_key": "",
+      "arguments": {}
+    },
+    {
+      "source": "audit.0",
+      "vhost": "billing",
+      "destination": "ghost.queue",
+      "destination_type": "queue",
+      "routing_key": "",
+      "arguments": {}
+    },
+    {
+      "source": "audit.0",
+      "vhost": "billing",
+      "destination": "payments.billing.4",
+      "destination_type": "queue",
+      "routing_key": "mail.*",
+      "arguments": {}
+    },
+    {
+      "source": "audit.1",
+      "vhost": "billing",
+      "destination": "audit.billing.5",
+      "destination_type": "queue",
+      "routing_key": "mail.*",
+      "arguments": {}
+    },
+    {
+      "source": "events.2",
+      "vhost": "billing",
+      "destination": "ghost.queue",
+      "destination_type": "queue",
+      "routing_key": "#",
+      "arguments": {}
+    }
+  ]
+}

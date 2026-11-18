@@ -1,0 +1,24 @@
+{
+  "users": [
+    null,
+    5,
+    "x",
+    {
+      "name": 5,
+      "tags": 7
+    }
+  ],
+  "queues": [
+    null,
+    {
+      "name": null,
+      "arguments": "x"
+    }
+  ],
+  "bindings": [
+    {}
+  ],
+  "exchanges": [
+    []
+  ]
+}

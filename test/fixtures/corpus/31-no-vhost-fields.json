@@ -1,0 +1,25 @@
+{
+  "queues": [
+    {
+      "name": "q1"
+    },
+    {
+      "name": "q2",
+      "durable": false
+    }
+  ],
+  "exchanges": [
+    {
+      "name": "e1",
+      "type": "topic"
+    }
+  ],
+  "bindings": [
+    {
+      "source": "e1",
+      "destination": "q1",
+      "destination_type": "queue",
+      "routing_key": "k"
+    }
+  ]
+}

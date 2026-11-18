@@ -1,0 +1,131 @@
+{
+  "rabbit_version": "3.13.7",
+  "rabbitmq_version": "3.12.13",
+  "users": [
+    {
+      "name": "guest",
+      "password_hash": "h1",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": [
+        "administrator"
+      ]
+    },
+    {
+      "name": "svc-0",
+      "password_hash": "h0",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": "monitoring"
+    }
+  ],
+  "vhosts": [
+    {
+      "name": "/"
+    }
+  ],
+  "permissions": [
+    {
+      "user": "svc-0",
+      "vhost": "/",
+      "configure": "^svc-.*",
+      "write": ".*",
+      "read": ".*"
+    }
+  ],
+  "topic_permissions": [],
+  "parameters": [],
+  "global_parameters": [],
+  "policies": [],
+  "queues": [
+    {
+      "name": "emails.root.0",
+      "vhost": "/",
+      "durable": false,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "quorum"
+      }
+    },
+    {
+      "name": "audit.root.1",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "classic",
+        "x-dead-letter-exchange": "audit.0",
+        "x-max-length": 10000
+      }
+    },
+    {
+      "name": "orders.root.2",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-max-length": 10000
+      }
+    },
+    {
+      "name": "payments.root.3",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    }
+  ],
+  "exchanges": [
+    {
+      "name": "audit.0",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "events.1",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "mail.2",
+      "vhost": "/",
+      "type": "topic",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "bindings": [
+    {
+      "source": "audit.0",
+      "vhost": "/",
+      "destination": "emails.root.0",
+      "destination_type": "queue",
+      "routing_key": "",
+      "arguments": {}
+    },
+    {
+      "source": "mail.2",
+      "vhost": "/",
+      "destination": "audit.root.1",
+      "destination_type": "queue",
+      "routing_key": "mail.*",
+      "arguments": {}
+    },
+    {
+      "source": "audit.0",
+      "vhost": "/",
+      "destination": "payments.root.3",
+      "destination_type": "queue",
+      "routing_key": "mail.*",
+      "arguments": {}
+    }
+  ]
+}
